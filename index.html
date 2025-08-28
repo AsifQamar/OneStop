@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneStop - The Future of Urban Mobility</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="container">
+            <h1 class="logo">OneStop</h1>
+            <nav>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#vision">Our Vision</a>
+                <a href="#search-app" class="nav-cta">Find a Ride</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-background"></div>
+            <div class="container hero-content">
+                <h2 class="animate-on-load">Reimagining Your Journey.</h2>
+                <p class="subtitle animate-on-load">One platform to instantly compare, choose, and book the fastest, cheapest ride. Welcome to the future of seamless travel.</p>
+                <a href="#search-app" class="cta-button animate-on-load">Get Started</a>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="how-it-works-section">
+            <div class="container">
+                <h3 class="section-title scroll-animate">Effortless in 3 Simple Steps</h3>
+                <div class="steps-container">
+                    <div class="step scroll-animate">
+                        <div class="step-number">1</div>
+                        <h4>Enter Your Route</h4>
+                        <p>Just tell us where you are and where you want to go.</p>
+                    </div>
+                    <div class="step-arrow scroll-animate">→</div>
+                    <div class="step scroll-animate">
+                        <div class="step-number">2</div>
+                        <h4>Instantly Compare</h4>
+                        <p>See every available ride from all major services, sorted by the fastest arrival time.</p>
+                    </div>
+                    <div class="step-arrow scroll-animate">→</div>
+                    <div class="step scroll-animate">
+                        <div class="step-number">3</div>
+                        <h4>Tap to Book</h4>
+                        <p>Choose the best option and get redirected to book your ride seamlessly.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="vision" class="vision-section">
+            <div class="container vision-content">
+                <div class="vision-text scroll-animate">
+                    <h3 class="section-title left-aligned">Our Vision for Mobility</h3>
+                    <p>We're not just building an app; we're creating a smarter way to navigate your city. Our goal is to eliminate the friction of modern travel.</p>
+                    <ul>
+                        <li><strong>AI-Powered Predictions:</strong> We're developing a model to predict the likelihood of driver cancellations, giving you more reliability.</li>
+                        <li><strong>Seamless Business Travel:</strong> Future premium features will include automatic expense tracking and report generation for professionals.</li>
+                        <li><strong>The Ultimate Travel Hub:</strong> OneStop aims to be your central platform for all urban transport needs, from cabs to public transit.</li>
+                    </ul>
+                </div>
+                <div class="vision-image-container scroll-animate">
+                    
+                    <img src="https://images.unsplash.com/photo-1531592618342-2b61b30bb412?q=80&w=1887&auto=format&fit=crop" alt="Futuristic City Vision">
+                </div>
+            </div>
+        </section>
+        
+        <section class="tech-section">
+            <div class="container">
+                <h3 class="section-title scroll-animate">Built with Modern Technology</h3>
+                <p class="tech-subtitle scroll-animate">Our prototype is built on a high-performance stack chosen for speed, reliability, and scalability.</p>
+                <div class="tech-logos scroll-animate">
+                    <div class="tech-logo-card">
+                        <img src="https://i.imgur.com/502SPaC.png" alt="React Logo">
+                        <span>React</span>
+                    </div>
+                     <div class="tech-logo-card">
+                        <img src="https://i.imgur.com/gY5pQqL.png" alt="Python Logo">
+                        <span>Python & FastAPI</span>
+                    </div>
+                     <div class="tech-logo-card">
+                        <img src="https://i.imgur.com/VYY2TPl.png" alt="Playwright Logo">
+                        <span>Playwright</span>
+                    </div>
+                     <div class="tech-logo-card">
+                        <img src="https://i.imgur.com/3Q9X0P0.png" alt="Vercel Logo">
+                        <span>Vercel</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="search-app" class="search-app-section">
+            <div class="container">
+                <h3 class="section-title scroll-animate">Find Your Perfect Ride Now</h3>
+                <form id="ride-form" class="ride-form scroll-animate">
+                    <input type="text" id="pickup" placeholder="Enter pickup location" required>
+                    <input type="text" id="destination" placeholder="Enter destination" required>
+                    <button type="submit" class="find-button">Find Rides</button>
+                </form>
+                
+                <div id="results-section" class="results-section">
+                    <div class="spinner" id="loading-spinner" style="display: none;"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 OneStop </p>
+        </div>
+    </footer>
+    
+    <script src="script.js"></script>
+</body>
+</html>
