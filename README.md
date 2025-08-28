@@ -1,4 +1,4 @@
-# 🚕 OneStop: The Ultimate Ride-Hailing Aggregator
+# 🚕 OneStop: Fastest & Cheapest Rides, One Place
 
 <div align="center">
 
