@@ -377,7 +377,7 @@ body::before {
 .floating-card {
     position: absolute;
     background: var(--surface-color);
-    backdrop-filter: var(--glass-backdrop);
+    /*backdrop-filter: var(--glass-backdrop);*/
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     opacity: 0.6;
@@ -389,6 +389,9 @@ body::before {
     top: 20%;
     left: 10%;
     animation: float 6s ease-in-out infinite;
+    background-image: url('https://i.pinimg.com/1200x/7c/f6/ab/7cf6ab644aa1084c3d8e5e547c03e018.jpg');
+    background-size: cover; 
+    background-position: center;
 }
 
 .card-2 {
@@ -397,7 +400,11 @@ body::before {
     top: 60%;
     right: 15%;
     animation: float 8s ease-in-out infinite reverse;
+    background-image: url('https://i.pinimg.com/736x/b1/1a/7c/b11a7c2467847228b0df8bfbb66c1959.jpg');
+    background-size: cover; 
+    background-position: center;
 }
+
 
 .card-3 {
     width: 80px;
@@ -405,6 +412,9 @@ body::before {
     top: 40%;
     left: 80%;
     animation: float 7s ease-in-out infinite;
+    background-image: url('https://i.pinimg.com/736x/b7/8c/ce/b78cce1e42a5cacd9689b6ec499ed2f6.jpg');
+    background-size: cover; 
+    background-position: center;
 }
 
 @keyframes float {
