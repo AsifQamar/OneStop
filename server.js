@@ -1,0 +1,91 @@
+import express from "express";
+import axios from "axios";
+import cors from "cors";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+app.get("/api/rides", async (req, res) => {
+  try {
+    const { pickup, destination } = req.query;
+
+    if (!pickup || !destination) {
+      return res.status(400).json({ error: "Pickup and destination required" });
+    }
+
+    // --- 1️⃣ Convert pickup & destination to lat/lng using Ola Geocoding API ---
+    const pickupGeo = await axios.get("https://api.olamaps.io/places/v1/geocode", {
+      params: { address: pickup, api_key: process.env.OLA_MAPS_KEY }
+    });
+
+    const destGeo = await axios.get("https://api.olamaps.io/places/v1/geocode", {
+      params: { address: destination, api_key: process.env.OLA_MAPS_KEY }
+    });
+
+    const pickupLoc = pickupGeo.data.geocodingResults[0]?.geometry?.location;
+    const destLoc = destGeo.data.geocodingResults[0]?.geometry?.location;
+    if (!pickupLoc || !destLoc) {
+      return res.status(400).json({ error: "Could not resolve locations" });
+    }
+
+    const pickupLatLng = `${pickupLoc.lat},${pickupLoc.lng}`;
+    const destLatLng = `${destLoc.lat},${destLoc.lng}`;
+
+    // --- 2️⃣ Get distance & ETA using Ola Distance Matrix API ---
+    const distanceRes = await axios.get("https://api.olamaps.io/routing/v1/distanceMatrix", {
+      params: {
+        origins: pickupLatLng,
+        destinations: destLatLng,
+        mode: "driving",
+        api_key: process.env.OLA_MAPS_KEY
+      }
+    });
+
+
+    const distanceData = distanceRes.data.rows[0].elements[0];
+    const distance_km = (distanceData.distance / 1000).toFixed(2); // The API returns distance in meters
+    const eta_min = Math.round(distanceData.duration / 60); // The API returns duration in seconds
+
+    // --- 3️⃣ Dummy Rides (for now, until real Ola/Uber integration) ---
+    let rides = [
+      { id: 1, service: "Uber", type: "Go", price: 250, eta: eta_min },
+      { id: 2, service: "Ola", type: "Mini", price: 200, eta: eta_min },
+      { id: 3, service: "Rapido", type: "Bike", price: 150, eta: eta_min }
+    ];
+
+    // Sort by price
+    rides.sort((a, b) => a.price - b.price);
+
+    res.json({ pickup, destination, distance_km, eta_min, rides });
+  } catch (err) {
+    console.error(err.response?.data || err.message);
+    res.status(500).json({ error: "Failed to fetch rides" });
+  }
+});
+
+
+
+// GET Map Embed URL securely
+app.get("/api/map", (req, res) => {
+  const { pickup, destination } = req.query;
+
+  if (!pickup || !destination) {
+      return res.status(400).json({ error: "Pickup and destination required" });
+  }
+
+  // CORRECTED URL and API key parameter
+  const mapUrl = `https://maps.olakrutrim.com/embed/directions?origin=${encodeURIComponent(
+      pickup
+  )}&destination=${encodeURIComponent(destination)}&mode=driving&key=${process.env.OLA_MAPS_KEY}`;
+
+  res.json({ mapUrl });
+});
+
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
