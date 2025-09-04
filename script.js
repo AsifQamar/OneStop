@@ -4,41 +4,82 @@ document.addEventListener('DOMContentLoaded', () => {
     const rideForm = document.getElementById('ride-form');
     const resultsSection = document.getElementById('results-section');
     const loadingSpinner = document.getElementById('loading-spinner');
-    
-    const rideData = [
-        { service: 'Uber', type: 'Go', eta: 3, price: 150, logo: 'https://i.imgur.com/08S322t.png' },
-        { service: 'Ola', type: 'Mini', eta: 4, price: 145, logo: 'https://i.imgur.com/TcasYfW.png' },
-        { service: 'Yatri Sathi', type: 'AC Taxi', eta: 5, price: 130, logo: 'https://i.imgur.com/2A7ccw9.png' },
-        { service: 'Uber', type: 'Premier', eta: 6, price: 210, logo: 'https://i.imgur.com/08S322t.png' },
-        { service: 'Ola', type: 'Prime Sedan', eta: 7, price: 200, logo: 'https://i.imgur.com/TcasYfW.png' },
-    ];
 
-    rideForm.addEventListener('submit', (event) => {
+    rideForm.addEventListener('submit', async (event) => {
         event.preventDefault();
-        findRides();
+        await findRides();
     });
 
-    function findRides() {
+    async function findRides() {
         resultsSection.innerHTML = '';
-        loadingSpinner.style.display = 'block'; // Make sure spinner exists or create it
-        
-        // This is a placeholder for the spinner if it's not in the HTML initially
-        if (!document.getElementById('loading-spinner')) {
-             resultsSection.innerHTML = '<div class="spinner" id="loading-spinner"></div>';
+        loadingSpinner.style.display = 'block';
+
+        const pickup = document.getElementById('pickup').value;
+        const destination = document.getElementById('destination').value;
+
+        if (!pickup || !destination) {
+            alert("Please enter both pickup and destination");
+            loadingSpinner.style.display = 'none';
+            return;
         }
 
-        setTimeout(() => {
-            const spinner = document.getElementById('loading-spinner');
-            if(spinner) spinner.style.display = 'none';
-            displayRides(rideData);
-        }, 2000);
+        try {
+            // Call backend API
+            const response = await fetch(`http://localhost:5000/api/rides?pickup=${pickup}&destination=${destination}`, {
+                cache: "no-store"
+            });
+            const data = await response.json();
+
+            loadingSpinner.style.display = 'none';
+
+            if (!data.rides || data.rides.length === 0) {
+                resultsSection.innerHTML = "<p>No rides available</p>";
+                return;
+            }
+
+            // Show distance & ETA
+            // Show distance & ETA
+            resultsSection.insertAdjacentHTML(
+                "beforeend",
+                `<p><strong>Distance:</strong> ${data.distance_km} km | <strong>ETA:</strong> ${data.eta_min} min</p>`
+            );
+
+
+            displayRides(data.rides);
+
+            // --- Update Map using Ola Maps ---
+            // --- Update Map Securely ---
+            // in script.js, inside the findRides function
+
+            // --- Update Map using Ola Maps ---
+            const mapFrame = document.getElementById("mapFrame");
+            const mapPlaceholder = document.querySelector(".map-placeholder"); // Get the placeholder element
+
+            if (mapFrame && mapPlaceholder) {
+                // Hide the placeholder and show the map frame
+                mapPlaceholder.style.display = "none";
+                mapFrame.style.display = "block";
+
+                const mapRes = await fetch(
+                    `http://localhost:5000/api/map?pickup=${encodeURIComponent(pickup)}&destination=${encodeURIComponent(destination)}`
+                );
+                const mapData = await mapRes.json();
+                mapFrame.src = mapData.mapUrl;
+            }
+
+
+        } catch (error) {
+            console.error(error);
+            loadingSpinner.style.display = 'none';
+            resultsSection.innerHTML = "<p>Failed to fetch rides</p>";
+        }
     }
 
     function displayRides(rides) {
-        const sortedRides = rides.sort((a, b) => a.eta - b.eta);
+        // Sort rides by price
+        const sortedRides = rides.sort((a, b) => a.price - b.price);
+
         sortedRides.forEach(ride => {
-            // Re-using the card structure from the previous response as it's solid.
-            // Styles in the new CSS file will give it the glossy look.
             const rideCardHTML = `
                 <div class="ride-card">
                     <img src="${ride.logo}" alt="${ride.service} Logo" class="service-logo">
@@ -55,24 +96,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- NEW: SCROLL ANIMATION LOGIC ---
-    // This adds a "visible" class to elements as they scroll into view.
-    
+    // --- SCROLL ANIMATION LOGIC ---
     const animatedElements = document.querySelectorAll('.scroll-animate');
-
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            // When the element is intersecting (visible on screen)
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
             }
         });
-    }, {
-        threshold: 0.1 // Trigger when 10% of the element is visible
-    });
+    }, { threshold: 0.1 });
 
-    // Tell the observer to watch each of our animated elements
-    animatedElements.forEach(el => {
-        observer.observe(el);
-    });
+    animatedElements.forEach(el => observer.observe(el));
 });
