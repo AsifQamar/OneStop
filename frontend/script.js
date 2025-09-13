@@ -70,10 +70,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         rides.forEach(ride => {
             // NOTE: We need to assign a logo based on the provider name from the backend.
-            const logos = {
-                'uber': 'https://i.imgur.com/08S322t.png',
-                'ola': 'https://i.imgur.com/TcasYfW.png',
-                'Namma Yatri': 'https://i.imgur.com/2A7ccw9.png'
+               const logos = {
+                'uber': 'https://images.icon-icons.com/2407/PNG/512/uber_icon_146079.png',
+                'ola': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnBg2eEBBr3N6fqhcyhQr6hwl7L5yBJ-R4PA&s',
+                'Namma Yatri': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRw9daVx0oUUzUDds2Hsr6Hrh3dTxBAVpMwzg&s'
                 // Add other provider logos here as you integrate them
             };
 
