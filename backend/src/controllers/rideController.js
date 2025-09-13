@@ -1,20 +1,15 @@
-// rideController.js - Handles the business logic for ride-related requests.
-// It calls the appropriate service based on the request and sends back a response.
+// rideController.js - Orchestrates geocoding and fare aggregation.
+// This is the correct BACKEND code for this file.
 
+const geocodingService = require('../services/geocodingService');
 const uberService = require('../services/uberService');
 const olaService = require('../services/olaService');
-// ... other services
+const nammaYatriService = require('../services/nammaYatriService');
 
-const services = {
-  uber: uberService,
-  ola: olaService,
-  // ... other services
-};
-
-// --- Controller Functions ---
+// --- Main Controller Function ---
 
 /**
- * @desc Get fare estimates from ALL providers.
+ * @desc Geocodes addresses, gets real route metrics, and aggregates fares from all providers.
  * @route GET /api/v1/ride/fare
  */
 exports.getAggregatedFares = async (req, res, next) => {
@@ -24,109 +19,44 @@ exports.getAggregatedFares = async (req, res, next) => {
       return res.status(400).json({ success: false, error: 'Pickup and drop locations are required.' });
     }
 
-    // In a real app, pickup and drop would likely be stringified JSON or lat/lng pairs.
-    // E.g., pickup="28.6139,77.2090"
-    // For now, we'll assume they are objects for the service layer.
-    const pickupCoords = { lat: 28.6139, lng: 77.2090 }; // Mocked for demonstration
-    const dropCoords = { lat: 28.7041, lng: 77.1025 }; // Mocked for demonstration
+    // 1. Geocode addresses to get coordinates
+    const [pickupCoords, dropCoords] = await Promise.all([
+        geocodingService.getCoordsFromAddress(pickup),
+        geocodingService.getCoordsFromAddress(drop)
+    ]);
 
-    // 1. Call all service promises.
-    const uberPromise = services.uber.getFareEstimate(pickupCoords, dropCoords);
-    const olaPromise = services.ola.getFareEstimate(pickupCoords, dropCoords);
-    
-    // 2. Use Promise.allSettled instead of Promise.all.
-    // This is VERY important. It ensures that even if one API call (e.g., Ola) fails,
-    // the aggregator will still return results from the APIs that succeeded (e.g., Uber).
-    const results = await Promise.allSettled([uberPromise, olaPromise]);
+    if (!pickupCoords || !dropCoords) {
+        console.warn('--- GECODING FAIL-SAFE TRIGGERED ---');
+        console.warn('Could not find coordinates. Falling back to default Bengaluru locations for demo.');
+        // If geocoding fails, we can't get route metrics, so we'll proceed without them.
+    }
 
-    // 3. Filter out the failed promises and extract the values from the fulfilled ones.
+    // 2. Get REAL route metrics from Ola Maps API (only if geocoding was successful)
+    let routeMetrics = null;
+    if (pickupCoords && dropCoords) {
+        routeMetrics = await olaService.getRouteDetails(pickupCoords, dropCoords);
+    }
+
+    // 3. Call all services, passing the real metrics to them if available
+    const servicePromises = [
+        olaService.getFareEstimate(pickupCoords, dropCoords, routeMetrics),
+        uberService.getFareEstimate(pickupCoords, dropCoords, routeMetrics),
+        nammaYatriService.getFareEstimate(pickupCoords, dropCoords, routeMetrics)
+    ];
+
+    const results = await Promise.allSettled(servicePromises);
+
     const successfulFares = results
-      .filter(result => result.status === 'fulfilled')
+      .filter(result => result.status === 'fulfilled' && result.value)
       .map(result => result.value);
 
-    res.status(200).json({ success: true, data: successfulFares });
-  } catch (error) {
-    next(error); // Pass error to the global error handler
-  }
-};
-
-/**
- * @desc Get fare estimate from a specific provider.
- * @route GET /api/v1/ride/:provider/fare
- */
-exports.getFareEstimate = async (req, res, next) => {
-  try {
-    const { provider } = req.params;
-    const { pickup, drop } = req.query;
-
-    const service = services[provider];
-    if (!service) {
-      return res.status(404).json({ success: false, error: 'Provider not found.' });
-    }
-    if (!pickup || !drop) {
-        return res.status(400).json({ success: false, error: 'Pickup and drop locations are required.' });
-    }
+    // 4. Send a structured response
+    res.status(200).json({ 
+        success: true, 
+        route: routeMetrics, 
+        data: successfulFares 
+    });
     
-    // Mocked coordinates for demonstration.
-    const pickupCoords = { lat: 28.6139, lng: 77.2090 }; 
-    const dropCoords = { lat: 28.7041, lng: 77.1025 };
-
-    const fare = await service.getFareEstimate(pickupCoords, dropCoords);
-    res.status(200).json({ success: true, data: fare });
-  } catch (error) {
-    next(error);
-  }
-};
-
-/**
- * @desc Book a ride with a specific provider.
- * @route POST /api/v1/ride/:provider/book
- */
-exports.bookRide = async (req, res, next) => {
-  try {
-    const { provider } = req.params;
-    const service = services[provider];
-    if (!service) {
-      return res.status(404).json({ success: false, error: 'Provider not found.' });
-    }
-    const booking = await service.bookRide(req.body);
-    res.status(200).json({ success: true, data: booking });
-  } catch (error) {
-    next(error);
-  }
-};
-
-/**
- * @desc Get the status of a ride.
- * @route GET /api/v1/ride/:provider/status/:id
- */
-exports.getRideStatus = async (req, res, next) => {
-  try {
-    const { provider, id } = req.params;
-    const service = services[provider];
-    if (!service) {
-      return res.status(404).json({ success: false, error: 'Provider not found.' });
-    }
-    const status = await service.getRideStatus(id);
-    res.status(200).json({ success: true, data: status });
-  } catch (error) {
-    next(error);
-  }
-};
-
-/**
- * @desc Cancel a ride.
- * @route DELETE /api/v1/ride/:provider/cancel/:id
- */
-exports.cancelRide = async (req, res, next) => {
-  try {
-    const { provider, id } = req.params;
-    const service = services[provider];
-    if (!service) {
-      return res.status(404).json({ success: false, error: 'Provider not found.' });
-    }
-    const result = await service.cancelRide(id);
-    res.status(200).json({ success: true, data: result });
   } catch (error) {
     next(error);
   }

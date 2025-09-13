@@ -1,27 +1,16 @@
+// routes/rideRoutes.js - Defines all API endpoints for ride-related actions.
+// This is the simplified version for the main prototype functionality.
 
 const express = require('express');
-const {
-  getAggregatedFares,
-  getFareEstimate,
-  bookRide,
-  getRideStatus,
-  cancelRide,
-} = require('../controllers/rideController');
-
+const { getAggregatedFares } = require('../controllers/rideController');
 
 const router = express.Router();
 
+// --- Route Definition ---
 
-
-router.get('/fare', getAggregatedFares);
-
-
-router.get('/:provider/fare', getFareEstimate);
-
-router.post('/:provider/book', bookRide);
-
-router.get('/:provider/status/:id', getRideStatus);
-
-router.delete('/:provider/cancel/:id', cancelRide);
+// The only endpoint the frontend needs. It gets fares from all providers.
+// GET /api/v1/ride/fare
+router.route('/fare').get(getAggregatedFares);
 
 module.exports = router;
+

@@ -1,94 +1,83 @@
-// olaService.js - REAL service for Ola.
+// services/olaService.js - Handles API calls to Ola services.
+// This now uses the official Ola Maps API for route details.
 
 const axios = require('axios');
 
-// 1. Axios instance for Ola API
-const olaApi = axios.create({
-    baseURL: process.env.OLA_API_URL, // e.g., 'https://api.olacabs.com/v1'
-    headers: {
-        'X-APP-TOKEN': process.env.OLA_API_KEY // Ola might use a different auth header
+/**
+ * Gets REAL route details (distance and duration) from the Ola Maps API.
+ * @param {object} pickupCoords - { lat, lng }
+ * @param {object} dropCoords - { lat, lng }
+ * @returns {Promise<object|null>} - A promise that resolves to { distance, duration } or null.
+ */
+exports.getRouteDetails = async (pickupCoords, dropCoords) => {
+    if (!process.env.OLA_MAPS_KEY) {
+        console.warn('[Ola Maps Service] OLA_MAPS_KEY not found. Cannot fetch real route details.');
+        return null;
     }
-});
 
-// 2. Normalization function for Ola's response
-const _normalizeFareResponse = (olaData) => {
-    // HYPOTHETICAL: Adapt to the real Ola API response structure.
-    const estimate = olaData.ride_estimates[0];
-    return {
-        provider: 'ola',
-        price: {
-            currency: 'INR',
-            min: estimate.amount_min,
-            max: estimate.amount_max
-        },
-        eta: `${estimate.pickup_time_in_minutes} mins`,
-        duration: `${estimate.travel_time_in_minutes} mins`
-    };
-};
+    console.log(`[Ola Maps Service] Getting REAL route details...`);
+    
+    // Format coordinates for the Ola Maps API: "lat,lng"
+    const origins = `${pickupCoords.lat},${pickupCoords.lng}`;
+    const destinations = `${dropCoords.lat},${dropCoords.lng}`;
 
-
-class OlaService {
-  async getFareEstimate(pickup, drop) {
-    console.log(`[Ola Service] Getting REAL fare for ${pickup} to ${drop}`);
     try {
-        // 3. Make the actual API call to Ola.
-        // Endpoint and params are HYPOTHETICAL.
-        const response = await olaApi.get('/ride/estimate', {
+        const response = await axios.get("https://api.olamaps.io/routing/v1/distanceMatrix", {
             params: {
-                pickup_lat: pickup.lat,
-                pickup_lng: pickup.lng,
-                drop_lat: drop.lat,
-                drop_lng: drop.lng,
-                category: 'sedan'
+                origins,
+                destinations,
+                mode: "driving",
+                api_key: process.env.OLA_MAPS_KEY
             }
         });
-        
-        // 4. Normalize the response.
-        return _normalizeFareResponse(response.data);
+
+        const element = response.data.elements[0];
+        if (element && element.status === 'OK') {
+            const details = {
+                distance: (element.distance.value / 1000).toFixed(2), // Convert meters to km
+                duration: Math.round(element.duration.value / 60) // Convert seconds to mins
+            };
+            console.log('[Ola Maps Service] Found route details:', details);
+            return details;
+        }
+        return null;
 
     } catch (error) {
-        console.error('[Ola Service] Error fetching fare:', error.response?.data || error.message);
-        throw new Error('Failed to fetch fare estimate from Ola.');
+        console.error(`[Ola Maps Service] Error fetching route details: ${error.message}`);
+        return null;
     }
-  }
+};
 
-  async bookRide(rideDetails) {
-    console.log('[Ola Service] Booking a ride with details:', rideDetails);
-    // TODO: Implement real booking logic
-    await new Promise(resolve => setTimeout(resolve, 600));
+/**
+ * Get fare estimate from Ola. Uses real route metrics if available.
+ * @param {object} pickupCoords - { lat, lng }
+ * @param {object} dropCoords - { lat, lng }
+ * @param {object} [routeMetrics=null] - Optional pre-fetched { distance, duration }.
+ * @returns {Promise<object>} - A promise that resolves to the fare estimate.
+ */
+exports.getFareEstimate = async (pickupCoords, dropCoords, routeMetrics = null) => {
+    let distanceInKm = 10; // Default fallback values
+    let durationInMinutes = 25;
+
+    if (routeMetrics) {
+        distanceInKm = parseFloat(routeMetrics.distance);
+        durationInMinutes = routeMetrics.duration;
+    }
     
-    return {
-      success: true,
-      bookingId: `OLA-${Date.now()}`,
-      status: 'ALLOTTING_DRIVER'
-    };
-  }
-
-  async getRideStatus(rideId) {
-    console.log(`[Ola Service] Getting status for ride: ${rideId}`);
-    // TODO: Implement real status logic
-    await new Promise(resolve => setTimeout(resolve, 120));
-    
-    return {
-      rideId,
-      status: 'DRIVER_REACHING_PICKUP',
-      driver: { name: 'Jane Smith', car: 'Maruti Swift', licensePlate: 'OL5678' },
-      eta: '2 mins'
-    };
-  }
-
-  async cancelRide(rideId) {
-    console.log(`[Ola Service] Cancelling ride: ${rideId}`);
-    // TODO: Implement real cancellation logic
-    await new Promise(resolve => setTimeout(resolve, 250));
+    // Dynamic mock fare calculation
+    const baseFare = 35;
+    const pricePerKm = 14;
+    const minPrice = Math.round(baseFare + (distanceInKm * pricePerKm));
+    const maxPrice = minPrice + Math.round(Math.random() * 30 + 15);
+    const eta = Math.round(2 + (Math.random() * 5));
 
     return {
-      rideId,
-      status: 'CANCELLED_BY_USER',
-      message: 'Ride cancelled successfully.'
+        provider: 'Ola',
+        price: { currency: 'INR', min: minPrice, max: maxPrice },
+        eta: `${eta} mins`,
+        duration: `${durationInMinutes} mins`,
+        // Include the real distance in the response for the frontend to display
+        distance: `${distanceInKm} km`, 
     };
-  }
-}
-
-module.exports = new OlaService();
+};
 
