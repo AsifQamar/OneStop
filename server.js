@@ -119,14 +119,14 @@ app.get("/api/rides", async (req, res) => {
 
     // --- 3️⃣ Generate Ride Data with new fare logic ---
     let rides = [
-      { id: 1, service: "Uber", type: "Go", price: calculateFare("Uber", "Go", distance_km), eta: eta_min, logo: "https://i.imgur.com/s211n2t.png" },
-      { id: 2, service: "Ola", type: "Mini", price: calculateFare("Ola", "Mini", distance_km), eta: eta_min, logo: "https://i.imgur.com/3jS5Y8P.png" },
-      { id: 3, service: "Rapido", type: "Bike", price: calculateFare("Rapido", "Bike", distance_km), eta: eta_min, logo: "https://i.imgur.com/U4hB2d1.png" },
-      { id: 4, service: "Yatri Sathi", type: "Cab", price: calculateFare("Yatri Sathi", "Cab", distance_km), eta: eta_min, logo: "https://i.imgur.com/8Y3k5cW.png" },
-      { id: 5, service: "Indrive", type: "Car", price: calculateFare("Indrive", "Car", distance_km), eta: eta_min, logo: "https://i.imgur.com/e3sY1zJ.png" },
-      { id: 6, service: "BluSmart", type: "Electric", price: calculateFare("BluSmart", "Electric", distance_km), eta: eta_min, logo: "https://i.imgur.com/p1g3fXY.png" },
-      { id: 7, service: "Uber", type: "Premier", price: calculateFare("Uber", "Premier", distance_km), eta: eta_min, logo: "https://i.imgur.com/s211n2t.png" },
-      { id: 8, service: "Ola", type: "Prime", price: calculateFare("Ola", "Prime", distance_km), eta: eta_min, logo: "https://i.imgur.com/3jS5Y8P.png" }
+      { id: 1, service: "Uber", type: "Go", price: calculateFare("Uber", "Go", distance_km), eta: eta_min, logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQys0XBQ5Iht-LdIlpMLTVLmGvd33hTz9lDMw&s" },
+      { id: 2, service: "Ola", type: "Mini", price: calculateFare("Ola", "Mini", distance_km), eta: eta_min, logo: "https://www.svgrepo.com/show/303255/ola-cabs-logo.svg" },
+      { id: 3, service: "Rapido", type: "Bike", price: calculateFare("Rapido", "Bike", distance_km), eta: eta_min, logo: "https://upload.wikimedia.org/wikipedia/en/e/e7/Rapido-logo.png" },
+      { id: 4, service: "Yatri Sathi", type: "Cab", price: calculateFare("Yatri Sathi", "Cab", distance_km), eta: eta_min, logo: "https://play-lh.googleusercontent.com/YCVmcSHlGGjKPjlmBE_vU4U6zWSG55lllT5dYNnHu1uT8APBxFK-7jSGVUW74p8jXiE=w240-h480-rw" },
+      { id: 5, service: "Indrive", type: "Car", price: calculateFare("Indrive", "Car", distance_km), eta: eta_min, logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf0iuYFSTJftX0Vrw92XJBSfirnWiUjcP27Q&s" },
+      { id: 6, service: "BluSmart", type: "Electric", price: calculateFare("BluSmart", "Electric", distance_km), eta: eta_min, logo: "https://play-lh.googleusercontent.com/cRdxFHJ3j82q9yT2nqBTzJagzaa8NvTTmx2eE8AID4tk-a_MCxYSqkLm7Xp5agkJl1Dh" },
+      { id: 7, service: "Uber", type: "Premier", price: calculateFare("Uber", "Premier", distance_km), eta: eta_min, logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQys0XBQ5Iht-LdIlpMLTVLmGvd33hTz9lDMw&s"  },
+      { id: 8, service: "Ola", type: "Prime", price: calculateFare("Ola", "Prime", distance_km), eta: eta_min, logo: "https://www.svgrepo.com/show/303255/ola-cabs-logo.svg"  }
     ];
 
     // Sort by price, handling cases where price might be null
