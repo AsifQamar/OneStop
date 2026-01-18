@@ -68,7 +68,9 @@ const calculateFare = (service, type, distance) => {
 
   return Math.round(price);
 };
-
+app.get('/', (req, res) => {
+  res.send('✅ Backend is running! (If you do not see the app, check vercel.json)');
+});
 
 app.get("/api/rides", async (req, res) => {
   try {
