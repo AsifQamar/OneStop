@@ -38,7 +38,9 @@ const calculateFare = (service, type, distance) => {
 };
 
 // 2. CHANGE THIS ROUTE (Serve the file instead of text)
-
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
 
 // ... (Keep the rest of your API routes exactly the same) ...
 app.get("/api/rides", async (req, res) => {
