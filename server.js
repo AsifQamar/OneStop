@@ -144,5 +144,12 @@ app.get("/api/rides", async (req, res) => {
 });
 
 
+// New Code
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+// Only listen if we are NOT in production (running locally)
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+}
+
+// Export the app for Vercel
+export default app;
