@@ -45,10 +45,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/rides?pickup=${pickup}&destination=${destination}`,
+    // New Code (Relative path)
+    const response = await fetch(
+        `/api/rides?pickup=${pickup}&destination=${destination}`,
         { cache: "no-store" }
-      );
+        );
       const data = await response.json();
 
       loadingSpinner.style.display = "none";
