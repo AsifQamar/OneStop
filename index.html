@@ -510,7 +510,6 @@
             .section-title { color: black !important; }
         }
     </style>
-    <link rel="stylesheet" href="/feature.css">
 </head>
 
 <body>
@@ -670,7 +669,7 @@
                             </button>
                         </form>
 
-                        <div id="results-section" class="results-section" aria-live="polite">
+                        <div id="results-section" class="results-section">
                             <div class="spinner" id="loading-spinner" style="display: none;">
                                 <div class="spinner-ring"></div>
                                 <div class="spinner-ring"></div>
@@ -834,8 +833,7 @@
         }
 
         // --- REST OF YOUR LOGIC ---
-        // The comparison experience is implemented in /script.js.
-        false && document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("DOMContentLoaded", () => {
             const rideForm = document.getElementById("ride-form");
             const resultsSection = document.getElementById("results-section");
             const loadingSpinner = document.getElementById("loading-spinner");
@@ -932,6 +930,5 @@
             animatedElements.forEach((el) => observer.observe(el));
         });
     </script>
-    <script src="/script.js"></script>
 </body>
 </html>

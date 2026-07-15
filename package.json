@@ -4,8 +4,7 @@
   "description": "<div align=\"center\">",
   "main": "script.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "node --test"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
