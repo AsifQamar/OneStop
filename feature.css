@@ -1,0 +1,123 @@
+.results-status {
+  padding: 1.25rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-small);
+  color: var(--text-color-secondary);
+  text-align: center;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.results-status.error {
+  color: #ffd1d1;
+  border-color: rgba(255, 92, 92, 0.45);
+  background: rgba(255, 92, 92, 0.08);
+}
+
+.trip-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .75rem;
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-small);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.summary-item.highlight {
+  border-color: rgba(253, 197, 0, .45);
+  background: rgba(253, 197, 0, .08);
+}
+
+.summary-label {
+  color: var(--text-color-secondary);
+  font-size: .76rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.comparison-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .75rem;
+}
+
+.control-field {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  color: var(--text-color-secondary);
+  font-size: .8rem;
+}
+
+.control-field select {
+  width: 100%;
+  padding: .75rem 2.25rem .75rem .8rem;
+  color: var(--text-color);
+  background: #27272b;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  font: inherit;
+}
+
+.ride-list {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+
+.ride-card.top-result {
+  border-color: rgba(253, 197, 0, .6);
+  box-shadow: 0 8px 28px rgba(253, 197, 0, .1);
+}
+
+.match-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: .3rem .65rem;
+  color: #111;
+  background: var(--primary-color);
+  border-bottom-left-radius: 8px;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.ride-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  margin-top: .5rem;
+}
+
+.metric {
+  padding: .24rem .48rem;
+  border-radius: 999px;
+  color: var(--text-color-secondary);
+  background: rgba(255, 255, 255, .07);
+  font-size: .7rem;
+  text-transform: capitalize;
+}
+
+.find-button:disabled {
+  cursor: wait;
+  opacity: .7;
+}
+
+.map-placeholder[hidden] { display: none; }
+
+@media (max-width: 560px) {
+  .trip-summary, .comparison-controls { grid-template-columns: 1fr; }
+  .ride-card { align-items: flex-start; gap: .8rem; padding: 1.25rem .9rem; }
+  .service-logo { width: 42px; height: 42px; }
+  .ride-price { min-width: 72px; padding-top: .5rem; }
+  .ride-price .eta { font-size: .72rem; }
+}
