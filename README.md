@@ -43,7 +43,6 @@ No more guesswork, no more wasted time. Just the best ride, right away.
 * **Transparent Pricing:** See all fare estimates side-by-side to make an informed, budget-friendly decision.
 * **Clean & Intuitive UI:** A modern, user-friendly interface designed for a seamless experience.
 * **Responsive Design:** Works beautifully whether you're on your desktop planning a trip or on your phone in a hurry.
-* **Smart Match:** Rank rides using a balanced score across fare, pickup time, and estimated reliability, or sort and filter the comparison yourself.
 
 ---
 
@@ -75,24 +74,18 @@ Make sure you have Node.js and npm installed on your machine.
 
 1.  Clone the repository:
     ```sh
-    git clone https://github.com/AsifQamar/OneStop.git
+    git clone [https://github.com/your-username/onestop.git](https://github.com/your-username/onestop.git)
     ```
-2.  Navigate to the project directory and install NPM packages:
+2.  Navigate to the backend directory and install NPM packages:
     ```sh
-    cd onestop
+    cd onestop/backend
     npm install
     ```
-3.  Add an Ola Maps API key to a local `.env` file:
-    ```sh
-    OLA_MAPS_KEY=your_api_key
-    ```
-4.  Start the app:
+3.  Start the backend server:
     ```sh
     npm start
     ```
-5.  Open `http://localhost:5000` in your browser.
-
-Run the automated checks with `npm test`.
+4.  Open the `index.html` file from the `frontend` folder in your favorite browser.
 
 ---
 
