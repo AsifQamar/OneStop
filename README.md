@@ -43,6 +43,8 @@ No more guesswork, no more wasted time. Just the best ride, right away.
 * **Transparent Pricing:** See all fare estimates side-by-side to make an informed, budget-friendly decision.
 * **Clean & Intuitive UI:** A modern, user-friendly interface designed for a seamless experience.
 * **Responsive Design:** Works beautifully whether you're on your desktop planning a trip or on your phone in a hurry.
+* **Daily Commute Tools:** Save named routes such as Home to Work, reopen recent trips, swap pickup and destination, filter results by budget, and share the best visible ride option.
+* **Private by Default:** Saved and recent routes remain in the user's browser through local storage and are never sent to a separate profile service.
 
 ---
 
@@ -74,18 +76,22 @@ Make sure you have Node.js and npm installed on your machine.
 
 1.  Clone the repository:
     ```sh
-    git clone [https://github.com/your-username/onestop.git](https://github.com/your-username/onestop.git)
+    git clone https://github.com/AsifQamar/OneStop.git
     ```
-2.  Navigate to the backend directory and install NPM packages:
+2.  Navigate to the project directory and install NPM packages:
     ```sh
-    cd onestop/backend
+    cd OneStop
     npm install
     ```
-3.  Start the backend server:
+3.  Create a `.env` file and add your Ola Maps API key:
     ```sh
-    npm start
+    OLA_MAPS_KEY=your_api_key
     ```
-4.  Open the `index.html` file from the `frontend` folder in your favorite browser.
+4.  Start the application server:
+    ```sh
+    node server.js
+    ```
+5.  Open `http://localhost:5000` in your browser.
 
 ---
 

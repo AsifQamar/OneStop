@@ -1,0 +1,128 @@
+.commute-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .75rem;
+}
+
+.swap-route-button,
+.save-route-button,
+.share-trip-button {
+  padding: .7rem .85rem;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  color: var(--text-color);
+  background: rgba(255, 255, 255, .06);
+  cursor: pointer;
+  font: inherit;
+  font-size: .85rem;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.swap-route-button:hover,
+.save-route-button:hover,
+.share-trip-button:hover {
+  border-color: var(--primary-color);
+  background: rgba(253, 197, 0, .1);
+}
+
+.commute-shortcuts {
+  display: flex;
+  flex-direction: column;
+  gap: .8rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.shortcut-empty,
+.commute-feedback {
+  color: var(--text-color-secondary);
+  font-size: .78rem;
+  line-height: 1.5;
+}
+
+.commute-feedback {
+  min-height: 1.2rem;
+  margin-top: .5rem;
+}
+
+.commute-feedback.error { color: #ffaaaa; }
+
+.shortcut-title {
+  margin-bottom: .45rem;
+  color: var(--text-color-secondary);
+  font-size: .72rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.shortcut-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+}
+
+.shortcut-item {
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .05);
+}
+
+.shortcut-button,
+.remove-shortcut-button {
+  border: 0;
+  color: var(--text-color);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-size: .75rem;
+}
+
+.shortcut-button { padding: .5rem .7rem; }
+.remove-shortcut-button { padding: .35rem .55rem; color: var(--text-color-secondary); }
+.shortcut-button:hover,
+.remove-shortcut-button:hover { background: rgba(253, 197, 0, .12); }
+
+.comparison-utility {
+  display: grid;
+  grid-template-columns: minmax(140px, 1fr) auto;
+  align-items: end;
+  gap: .75rem;
+  padding: .9rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-small);
+  background: rgba(255, 255, 255, .04);
+}
+
+.budget-control {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  color: var(--text-color-secondary);
+  font-size: .72rem;
+}
+
+.budget-control select {
+  padding: .6rem .75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-color);
+  background: #27272b;
+  font: inherit;
+}
+
+.budget-result-count {
+  grid-column: 1 / -1;
+  color: var(--text-color-secondary);
+  font-size: .72rem;
+}
+
+.ride-card[hidden] { display: none; }
+
+@media (max-width: 520px) {
+  .comparison-utility { grid-template-columns: 1fr; align-items: stretch; }
+  .budget-result-count { grid-column: 1; }
+}
